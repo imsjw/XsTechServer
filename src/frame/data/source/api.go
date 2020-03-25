@@ -1,9 +1,9 @@
 package source
 
 import (
-	"common/src/config"
 	"database/sql"
 	"fmt"
+	"frame/config"
 	"log"
 )
 

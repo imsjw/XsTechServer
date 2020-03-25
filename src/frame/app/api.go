@@ -1,10 +1,10 @@
 package app
 
 import (
-	"common/src/config"
-	"common/src/data/source"
-	"common/src/handler"
 	"fmt"
+	"frame/config"
+	"frame/data/source"
+	"frame/handler"
 	"log"
 	"net"
 )

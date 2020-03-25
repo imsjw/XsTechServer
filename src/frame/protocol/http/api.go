@@ -2,8 +2,8 @@ package http
 
 import (
 	"bufio"
-	"common/src/interfaces"
 	"fmt"
+	"frame/interfaces"
 	"log"
 	"net"
 	"time"

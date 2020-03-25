@@ -1,7 +1,7 @@
 package main
 
 import (
-	"common/src/app"
+	"frame/app"
 	_ "github.com/go-sql-driver/mysql"
 )
 

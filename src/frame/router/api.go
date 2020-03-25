@@ -1,7 +1,7 @@
 package router
 
 import (
-	"common/src/interfaces"
+	"frame/interfaces"
 	"log"
 )
 
