@@ -6,10 +6,10 @@ import (
 	"frame/config"
 	sysConstant "frame/constant"
 	sysEntity "frame/entity"
-	oauthConstant "oauth/constant"
-	"oauth/dao"
-	"oauth/entity"
-	"oauth/util"
+	oauthConstant "frame/oauth/constant"
+	"frame/oauth/dao"
+	"frame/oauth/entity"
+	"frame/oauth/util"
 	"time"
 )
 

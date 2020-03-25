@@ -1,12 +1,12 @@
 package dao
 
 import (
-	"frame/data_source"
-	"oauth/entity"
+	"frame/data/source"
+	"frame/oauth/entity"
 )
 
 var userDao = new(struct {
-	data_source.BaseDao
+	source.BaseDao
 })
 
 func init() {
@@ -15,7 +15,7 @@ func init() {
 
 func SelectUserByUserNameAndPassword(username string, password string) *entity.User {
 	sql := "select id,username from user where username = ? and password = ?"
-	rows, err := data_source.Query(sql, username, password)
+	rows, err := source.Query(sql, username, password)
 	if err != nil {
 		panic(err)
 	}

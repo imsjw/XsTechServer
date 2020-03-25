@@ -1,8 +1,8 @@
 package router
 
 import (
+	"frame/oauth/controller"
 	"frame/router"
-	"oauth/controller"
 )
 
 func Init() {

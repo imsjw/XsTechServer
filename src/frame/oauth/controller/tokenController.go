@@ -3,7 +3,7 @@ package controller
 import (
 	"frame/entity"
 	"frame/interfaces"
-	"oauth/service"
+	"frame/oauth/service"
 )
 
 func Token(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {

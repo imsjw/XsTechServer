@@ -1,8 +1,8 @@
 package service
 
 import (
-	"oauth/dao"
-	"oauth/entity"
+	"frame/oauth/dao"
+	"frame/oauth/entity"
 )
 
 func FindUserByUserNameAndPassword(username string, password string) *entity.User {

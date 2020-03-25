@@ -2,7 +2,7 @@ package app
 
 import (
 	"frame/config"
-	"oauth/router"
+	"frame/oauth/router"
 )
 
 func init() {
