@@ -1,0 +1,10 @@
+{
+  "http": {
+    "server": {
+      "port": 8888
+    }
+  },
+  "datasource": {
+    "password": "QWE###QAZ8888#F"
+  }
+}

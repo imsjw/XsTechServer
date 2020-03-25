@@ -1,0 +1,29 @@
+{
+  "http": {
+    "server": {
+      "port": 8888
+    },
+    "OAuth": {
+      "Enable": true,
+      "Password": {
+        "Salt": "aaaaaa"
+      },
+      "AccessToken": {
+        "Salt": "aaaaaa",
+        "ValidTime": 86400000
+      },
+      "RefreshToken": {
+        "Salt": "aaaaaa",
+        "ValidTime": 2592000000
+      }
+    }
+  },
+  "DataSource": {
+    "driverName": "mysql",
+    "username": "root",
+    "password": "admin123456",
+    "host": "127.0.0.1",
+    "port": 3306,
+    "DBName": "xs_tech"
+  }
+}

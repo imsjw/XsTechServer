@@ -1,0 +1,14 @@
+[Unit]
+Description=XSTech
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/app/XSTech/server/bin/server
+ExecStop=/bin/kill -15 $MAINPID
+
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
