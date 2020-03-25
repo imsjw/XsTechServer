@@ -1,12 +1,12 @@
 package main
 
 import (
-	"frame/application"
+	"frame/app"
 	_ "github.com/go-sql-driver/mysql"
 	"xs/router"
 )
 
 func main() {
-	application.Start()
+	app.Start()
 	router.Init()
 }
