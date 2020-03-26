@@ -1,4 +1,4 @@
-package source
+package db
 
 type DataSource interface {
 }

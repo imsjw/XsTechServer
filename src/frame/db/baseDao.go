@@ -1,4 +1,4 @@
-package source
+package db
 
 type BaseDao struct {
 	TableName string

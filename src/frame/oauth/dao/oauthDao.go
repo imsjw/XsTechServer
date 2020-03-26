@@ -2,7 +2,7 @@ package dao
 
 import (
 	"fmt"
-	"frame/data/source"
+	"frame/db"
 	"frame/oauth/entity"
 )
 
@@ -11,7 +11,7 @@ func SelectOauthByUserIdAndClient(userId int, client string) *entity.Oauth {
 		"id,user_id,client,access_token,access_token_expires_time,refresh_token,refresh_token_expires_time," +
 		"create_time,create_user,update_time,update_user " +
 		"from oauth where user_id = ? and client = ?"
-	rows, err := source.Query(sql, userId, client)
+	rows, err := db.Query(sql, userId, client)
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +31,7 @@ func SelectOauthByUserIdAndClient(userId int, client string) *entity.Oauth {
 
 func DeleteOauthByUserIdAndClient(userId int, client string) {
 	sql := "delete from oauth where user_id = ? and client = ?"
-	_, err := source.Exec(sql, userId, client)
+	_, err := db.Exec(sql, userId, client)
 	if err != nil {
 		panic(err)
 	}

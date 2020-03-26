@@ -3,27 +3,27 @@
     "server": {
       "port": 8888
     },
-    "OAuth": {
-      "Enable": true,
-      "Password": {
-        "Salt": "aaaaaa"
+    "oauth": {
+      "enable": true,
+      "password": {
+        "salt": "aaaaaa"
       },
-      "AccessToken": {
-        "Salt": "aaaaaa",
-        "ValidTime": 86400000
+      "accessToken": {
+        "salt": "aaaaaa",
+        "validTime": 86400000
       },
-      "RefreshToken": {
-        "Salt": "aaaaaa",
-        "ValidTime": 2592000000
+      "refreshToken": {
+        "salt": "aaaaaa",
+        "validTime": 2592000000
       }
     }
   },
-  "DataSource": {
-    "driverName": "mysql",
+  "datasource": {
+    "driver": "mysql",
     "username": "root",
     "password": "admin123456",
     "host": "127.0.0.1",
     "port": 3306,
-    "DBName": "xs_tech"
+    "db": "xs_tech"
   }
 }
