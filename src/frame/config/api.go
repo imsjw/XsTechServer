@@ -3,15 +3,15 @@ package config
 var configInstance Config
 
 func init() {
-	configInstance = new(DefaultConfig)
+	configInstance = NewDefaultConfig()
 }
 
 func SetInstance(instance Config) {
 	configInstance = instance
 }
 
-func Init() error {
-	return configInstance.Init()
+func Init() {
+	configInstance.Init()
 }
 
 func Get(key string) interface{} {
