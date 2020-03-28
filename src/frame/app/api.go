@@ -3,25 +3,12 @@ package app
 import (
 	"frame/config"
 	"frame/datasource"
+	"frame/log"
 )
 
-func Start() error {
+func Start() {
+	log.Info("frame.app.Start 开始启动应用")
 	config.Init()
 	datasource.Init()
-	//
-	//listener, err := net.Listen("tcp", fmt.Sprint("localhost:", config.GetHttpServerPort()))
-	//if err != nil {
-	//	log.Println("net listener error [error info:", err, "]")
-	//	return err
-	//}
-	//log.Println("http listener success [port:", config.GetHttpServerPort(), "]")
-	//for {
-	//	conn, err := listener.Accept()
-	//	if err != nil {
-	//		continue
-	//	}
-	//	go handler.Http(conn)
-	//}
-	return nil
-
+	listen()
 }

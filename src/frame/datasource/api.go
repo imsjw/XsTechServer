@@ -48,7 +48,7 @@ func Init() {
 		return
 	}
 	dbInstance = db
-	log.Info("数据库连接成功")
+	log.Info("frame.datasource.Init 数据库连接成功")
 
 }
 
