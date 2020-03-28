@@ -2,12 +2,12 @@ package app
 
 import (
 	"frame/config"
+	"frame/datasource"
 )
 
 func Start() error {
 	config.Init()
-
-	//source.Init()
+	datasource.Init()
 	//
 	//listener, err := net.Listen("tcp", fmt.Sprint("localhost:", config.GetHttpServerPort()))
 	//if err != nil {
