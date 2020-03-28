@@ -6,9 +6,12 @@ import (
 	"frame/log"
 )
 
-func Start() {
+func Init() {
 	log.Info("frame.app.Start 开始启动应用")
 	config.Init()
 	datasource.Init()
+}
+
+func Start() {
 	listen()
 }

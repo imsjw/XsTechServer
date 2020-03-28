@@ -1,9 +1,8 @@
-package controller
+package oauth
 
 import (
 	"frame/entity"
 	"frame/interfaces"
-	"frame/oauth/service"
 )
 
 func Token(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
@@ -37,7 +36,7 @@ func Token(req interfaces.Request, resp interfaces.Response, i *interfaces.Inter
 	switch p.GrantType {
 	case "password":
 		{
-			loginRes := service.PassworMethodAuthorize(p.UserName, p.Password, p.Client)
+			loginRes := PassworMethodAuthorize(p.UserName, p.Password, p.Client)
 			resp.SetObjResult(loginRes)
 		}
 	default:

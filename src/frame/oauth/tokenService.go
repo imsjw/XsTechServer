@@ -1,15 +1,9 @@
-package service
+package oauth
 
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"frame/config"
-	sysConstant "frame/constant"
 	sysEntity "frame/entity"
-	oauthConstant "frame/oauth/constant"
-	"frame/oauth/dao"
-	"frame/oauth/entity"
-	"frame/oauth/util"
 	"time"
 )
 
@@ -17,9 +11,9 @@ func PassworMethodAuthorize(username string, rawPassword string, client string) 
 	encodePassword := PasswordEncryption(rawPassword)
 	user := FindUserByUserNameAndPassword(username, encodePassword)
 	if user == nil {
-		return oauthConstant.ResultUserOrPasswordError
+		return ResultUserOrPasswordError
 	}
-	oauth := dao.SelectOauthByUserIdAndClient(user.Id, client)
+	oauth := SelectOauthByUserIdAndClient(user.Id, client)
 	res := new(struct {
 		sysEntity.BaseResult
 		UserId                 int
@@ -29,28 +23,26 @@ func PassworMethodAuthorize(username string, rawPassword string, client string) 
 	})
 
 	//删除旧token
-	dao.DeleteOauthByUserIdAndClient(user.Id, client)
+	DeleteOauthByUserIdAndClient(user.Id, client)
 	//创建新的token
-	oauth = new(entity.Oauth)
+	oauth = new(Oauth)
 	oauth.UserId = user.Id
 	oauth.Client = client
 	currTime := time.Now().Unix()
-	oauth.AccessTokenExpiresTime = currTime + config.GetHttpOAuthAccessTokenValidTime()
-	oauth.RefreshTokenExpiresTime = currTime + config.GetHttpOAuthRefreshTokenValidTime()
+	oauth.AccessTokenExpiresTime = currTime + configAccessTokenValidTime
+	oauth.RefreshTokenExpiresTime = currTime + configRefreshTokenValidTime
 	oauth.CreateTime = time.Now().Unix()
 	oauth.UpdateTime = time.Now().Unix()
 	oauth.CreateUser = user.Id
 	oauth.UpdateUser = user.Id
 
-	accessToken := util.JwtHS256(oauth, config.GetHttpOAuthAccessTokenSalt())
-	refreshToken := util.JwtHS256(oauth, config.GetHttpOAuthRefreshTokenSalt())
+	accessToken := JwtHS256(oauth, configAccessTokenSalt)
+	refreshToken := JwtHS256(oauth, configRefreshTokenSalt)
 	oauth.AccessToken = accessToken
 	oauth.RefreshToken = refreshToken
 
-	dao.InsertOauth(oauth)
+	InsertOauth(oauth)
 
-	res.Code = sysConstant.ResultCodeOk
-	res.Msg = sysConstant.ResultMsgOk
 	res.UserId = user.Id
 	res.Client = client
 	res.AccessToken = accessToken
@@ -59,7 +51,7 @@ func PassworMethodAuthorize(username string, rawPassword string, client string) 
 }
 
 func PasswordEncryption(rawPassword string) string {
-	salt := config.GetHttpOAuthPasswordSalt()
+	salt := configPasswordSalt
 	h := md5.New()
 	h.Write([]byte(rawPassword))
 	h.Write([]byte(salt))

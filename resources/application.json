@@ -2,20 +2,20 @@
   "http": {
     "server": {
       "port": 8888
+    }
+  },
+  "oauth": {
+    "enable": true,
+    "password": {
+      "salt": "aaaaaa"
     },
-    "oauth": {
-      "enable": true,
-      "password": {
-        "salt": "aaaaaa"
-      },
-      "accessToken": {
-        "salt": "aaaaaa",
-        "validTime": 86400000
-      },
-      "refreshToken": {
-        "salt": "aaaaaa",
-        "validTime": 2592000000
-      }
+    "accessToken": {
+      "salt": "aaaaaa",
+      "validTime": 86400000
+    },
+    "refreshToken": {
+      "salt": "aaaaaa",
+      "validTime": 2592000000
     }
   },
   "datasource": {

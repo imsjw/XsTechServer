@@ -36,8 +36,36 @@ func GetString(key string) string {
 
 func GetInt(key string) int {
 	v := configInstance.Get(key)
-	if v != nil {
-		return (int)(v.(float64))
+	if v == nil {
+		return 0
 	}
-	return 0
+
+	switch v.(type) {
+	case float64:
+		return (int)(v.(float64))
+	default:
+		return v.(int)
+	}
+}
+
+func GetInt64(key string) int64 {
+	v := configInstance.Get(key)
+	if v == nil {
+		return 0
+	}
+
+	switch v.(type) {
+	case float64:
+		return (int64)(v.(float64))
+	default:
+		return v.(int64)
+	}
+}
+
+func GetBool(key string) bool {
+	v := configInstance.Get(key)
+	if v == nil {
+		return false
+	}
+	return v.(bool)
 }

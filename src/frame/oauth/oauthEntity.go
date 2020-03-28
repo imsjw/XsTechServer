@@ -1,4 +1,4 @@
-package entity
+package oauth
 
 import "frame/entity"
 
