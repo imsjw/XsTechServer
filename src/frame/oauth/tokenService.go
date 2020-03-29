@@ -24,7 +24,7 @@ func ServicePassworMethodAuthorize(username string, rawPassword string, client s
 	//删除旧token
 	DaoDeleteOauthByUserIdAndClient(user.Id, client)
 	//创建新的token
-	oauth = new(Oauth)
+	oauth = new(Auth)
 	oauth.UserId = user.Id
 	oauth.Client = client
 	currTime := time.Now().Unix()
@@ -57,7 +57,7 @@ func ServicePasswordEncryption(rawPassword string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-func ServiceGetOauthByAccessToken(accessToken string) *Oauth {
+func ServiceGetOauthByAccessToken(accessToken string) *Auth {
 	oauth := DaoSelectOauthByAccessToken(accessToken)
 	return oauth
 }

@@ -1,6 +1,7 @@
 package oauth
 
 import (
+	"database/sql"
 	"fmt"
 	"frame/datasource"
 )
@@ -14,7 +15,7 @@ func init() {
 	authDao.Columns = "id,user_id,client,access_token,access_token_expires_time,refresh_token,refresh_token_expires_time,create_time,create_user,update_time,update_user"
 }
 
-func InsertOauth(oauth *Oauth) {
+func InsertOauth(oauth *Auth) {
 	kv := make(map[string]interface{})
 
 	if oauth.Id != 0 {
@@ -81,42 +82,38 @@ func DaoDeleteOauthByUserIdAndClient(userId int, client string) {
 	}
 }
 
-func DaoSelectOauthByUserIdAndClient(userId int, client string) *Oauth {
+func DaoSelectOauthByUserIdAndClient(userId int, client string) *Auth {
 	sql := fmt.Sprint("select ", authDao.Columns, " from ", authDao.TableName, " where user_id = ? and client = ?")
 	rows, err := datasource.Query(sql, userId, client)
 	if err != nil {
 		panic(err)
 	}
 
-	var oauth Oauth
 	for rows.Next() {
-		err := rows.Scan(&oauth.Id, &oauth.UserId, &oauth.Client, &oauth.AccessToken, &oauth.AccessTokenExpiresTime,
-			&oauth.RefreshToken, &oauth.RefreshTokenExpiresTime, &oauth.CreateTime, &oauth.CreateUser, &oauth.UpdateTime, &oauth.UpdateUser)
-		if err != nil {
-			panic(err)
-		}
-		return &oauth
+		return daoRowsToAuth(rows)
 	}
 
 	return nil
 }
 
-func DaoSelectOauthByAccessToken(accessToken string) *Oauth {
+func DaoSelectOauthByAccessToken(accessToken string) *Auth {
 	sql := fmt.Sprint("select ", authDao.Columns, " from ", authDao.TableName, " where access_token = ?")
 	rows, err := datasource.Query(sql, accessToken)
 	if err != nil {
 		panic(err)
 	}
-
-	var oauth Oauth
 	for rows.Next() {
-		err := rows.Scan(&oauth.Id, &oauth.UserId, &oauth.Client, &oauth.AccessToken, &oauth.AccessTokenExpiresTime,
-			&oauth.RefreshToken, &oauth.RefreshTokenExpiresTime, &oauth.CreateTime, &oauth.CreateUser, &oauth.UpdateTime, &oauth.UpdateUser)
-		if err != nil {
-			panic(err)
-		}
-		return &oauth
+		return daoRowsToAuth(rows)
 	}
-
 	return nil
+}
+
+func daoRowsToAuth(rows *sql.Rows) *Auth {
+	var auth Auth
+	err := rows.Scan(&auth.Id, &auth.UserId, &auth.Client, &auth.AccessToken, &auth.AccessTokenExpiresTime,
+		&auth.RefreshToken, &auth.RefreshTokenExpiresTime, &auth.CreateTime, &auth.CreateUser, &auth.UpdateTime, &auth.UpdateUser)
+	if err != nil {
+		panic(err)
+	}
+	return &auth
 }

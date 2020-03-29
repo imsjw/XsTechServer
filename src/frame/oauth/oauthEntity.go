@@ -2,7 +2,7 @@ package oauth
 
 import "frame/entity"
 
-type Oauth struct {
+type Auth struct {
 	entity.BaseEntity
 	Id                      int
 	UserId                  int
