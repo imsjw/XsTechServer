@@ -3,6 +3,7 @@ package oauth
 import (
 	"frame/handler"
 	"frame/interfaces"
+	"frame/protocol/http"
 )
 
 func Init() {
@@ -11,7 +12,12 @@ func Init() {
 		return
 	}
 	initRouter()
+	AddFilterWhiteList()
 	handler.AddFilter(filter)
+}
+
+func AddFilterWhiteList() {
+	handler.AddFilterWhiteList(http.MethodPOST, UrlToken)
 }
 
 func filter(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) bool {

@@ -5,5 +5,5 @@ import (
 )
 
 func initRouter() {
-	router.Add("/oauth/token", ControllerPostToken, "POST")
+	router.Add(UrlToken, ControllerPostToken, "POST")
 }
