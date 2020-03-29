@@ -5,6 +5,15 @@ import (
 	"frame/datasource"
 )
 
+var authDao = new(struct {
+	datasource.BaseDao
+})
+
+func init() {
+	authDao.TableName = "oauth_auth"
+	authDao.Columns = "id,user_id,client,access_token,access_token_expires_time,refresh_token,refresh_token_expires_time,create_time,create_user,update_time,update_user"
+}
+
 func InsertOauth(oauth *Oauth) {
 	kv := make(map[string]interface{})
 
@@ -56,7 +65,7 @@ func InsertOauth(oauth *Oauth) {
 	sqlColumNames = sqlColumNames[:len(sqlColumNames)-1]
 	rpStr = rpStr[:len(rpStr)-1]
 
-	sql := fmt.Sprint("insert into oauth (", sqlColumNames+") values (", rpStr, ")")
+	sql := fmt.Sprint("insert into ", authDao.TableName, " (", sqlColumNames+") values (", rpStr, ")")
 
 	_, err := datasource.Exec(sql, sqlColumValues...)
 	if err != nil {
@@ -65,7 +74,7 @@ func InsertOauth(oauth *Oauth) {
 }
 
 func DaoDeleteOauthByUserIdAndClient(userId int, client string) {
-	sql := "delete from oauth where user_id = ? and client = ?"
+	sql := fmt.Sprint("delete from ", authDao.TableName, " where user_id = ? and client = ?")
 	_, err := datasource.Exec(sql, userId, client)
 	if err != nil {
 		panic(err)
@@ -73,10 +82,7 @@ func DaoDeleteOauthByUserIdAndClient(userId int, client string) {
 }
 
 func DaoSelectOauthByUserIdAndClient(userId int, client string) *Oauth {
-	sql := "select " +
-		"id,user_id,client,access_token,access_token_expires_time,refresh_token,refresh_token_expires_time," +
-		"create_time,create_user,update_time,update_user " +
-		"from oauth where user_id = ? and client = ?"
+	sql := fmt.Sprint("select ", authDao.Columns, " from ", authDao.TableName, " where user_id = ? and client = ?")
 	rows, err := datasource.Query(sql, userId, client)
 	if err != nil {
 		panic(err)
@@ -96,10 +102,7 @@ func DaoSelectOauthByUserIdAndClient(userId int, client string) *Oauth {
 }
 
 func DaoSelectOauthByAccessToken(accessToken string) *Oauth {
-	sql := "select " +
-		"id,user_id,client,access_token,access_token_expires_time,refresh_token,refresh_token_expires_time," +
-		"create_time,create_user,update_time,update_user " +
-		"from oauth where access_token = ?"
+	sql := fmt.Sprint("select ", authDao.Columns, " from ", authDao.TableName, " where access_token = ?")
 	rows, err := datasource.Query(sql, accessToken)
 	if err != nil {
 		panic(err)
