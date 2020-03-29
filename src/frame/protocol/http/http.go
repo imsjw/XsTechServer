@@ -45,3 +45,4 @@ func (This *Response) GetBody() []byte {
 func (This *Response) SetBody(body []byte) {
 	This.body = body
 }
+

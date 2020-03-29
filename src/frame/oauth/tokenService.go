@@ -3,19 +3,18 @@ package oauth
 import (
 	"crypto/md5"
 	"encoding/hex"
-	sysEntity "frame/entity"
+	"frame/entity"
 	"time"
 )
 
-func PassworMethodAuthorize(username string, rawPassword string, client string) interface{} {
-	encodePassword := PasswordEncryption(rawPassword)
+func ServicePassworMethodAuthorize(username string, rawPassword string, client string) interface{} {
+	encodePassword := ServicePasswordEncryption(rawPassword)
 	user := ServiceFindUserByUserNameAndPassword(username, encodePassword)
 	if user == nil {
 		return ResultUserOrPasswordError
 	}
 	oauth := DaoSelectOauthByUserIdAndClient(user.Id, client)
 	res := new(struct {
-		sysEntity.BaseResult
 		UserId                 int
 		Client                 string
 		AccessToken            string
@@ -47,13 +46,18 @@ func PassworMethodAuthorize(username string, rawPassword string, client string) 
 	res.Client = client
 	res.AccessToken = accessToken
 	res.AccessTokenExpiresTime = oauth.AccessTokenExpiresTime
-	return res
+	return entity.NewSuccessResult(res)
 }
 
-func PasswordEncryption(rawPassword string) string {
+func ServicePasswordEncryption(rawPassword string) string {
 	salt := configPasswordSalt
 	h := md5.New()
 	h.Write([]byte(rawPassword))
 	h.Write([]byte(salt))
 	return hex.EncodeToString(h.Sum(nil))
+}
+
+func ServiceGetOauthByAccessToken(accessToken string) *Oauth {
+	oauth := DaoSelectOauthByAccessToken(accessToken)
+	return oauth
 }

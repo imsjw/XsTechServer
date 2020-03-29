@@ -7,6 +7,7 @@ import "frame/entity"
 */
 var ResultUserOrPasswordError = entity.BaseResult{Code: 100, Msg: "账号不存在或密码错误"}
 
+//ConfigKey
 const (
 	ConfigKeyOauthEnable                = "oauth.enable"
 	ConfigKeyOauthAccessTokenValidTime  = "oauth.accessToken.validTime"
@@ -14,4 +15,14 @@ const (
 	ConfigKeyOauthAccessTokenSalt       = "oauth.accessToken.salt"
 	ConfigKeyOauthRefreshTokenSalt      = "oauth.refreshToken.salt"
 	ConfigKeyOAuthPasswordSalt          = "oauth.password.salt"
+)
+
+//header中的key
+const (
+	HeaderKeyToken = "Token"
+)
+
+//RouterUrl
+const (
+	UrlToken = "/oauth/token"
 )

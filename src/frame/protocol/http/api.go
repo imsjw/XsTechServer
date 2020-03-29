@@ -4,14 +4,14 @@ import (
 	"bufio"
 	"fmt"
 	"frame/interfaces"
-	"log"
+	"frame/log"
 	"net"
 	"time"
 )
 
-func Analysis(conn net.Conn) (req *Request, resp *Response, err error) {
+func Analysis(conn net.Conn) (req *Request, resp *Response) {
 	req = NewRequest(conn)
-	err = req.analysis()
+	req.analysis()
 	resp = NewResponse(req)
 	return
 }
@@ -35,6 +35,6 @@ func OutResponse(req *Request, resp *Response, i *interfaces.Interface) {
 	w.Write(resp.GetBody())
 	w.Flush()
 
-	log.Println("method: ", req.method, " url: ", req.url, " reqBody: ", string(req.body), " respBody:", string(resp.body))
+	log.Info("frame.protocol.http.OutResponse\nmethod:", req.method, " url:", req.url, "\nreqBody: ", string(req.body), "\nrespBody:", string(resp.body))
 
 }

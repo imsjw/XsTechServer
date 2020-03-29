@@ -6,6 +6,7 @@ import (
 	"frame/log"
 )
 
+var configEnable bool
 var configAccessTokenValidTime int64
 var configRefreshTokenValidTime int64
 var configAccessTokenSalt string
@@ -13,10 +14,11 @@ var configRefreshTokenSalt string
 var configPasswordSalt string
 
 func initConfig() {
-	if config.Exist(ConfigKeyOauthEnable) {
+	if !config.Exist(ConfigKeyOauthEnable) {
 		return
 	}
-	if config.GetBool(ConfigKeyOauthEnable) {
+	configEnable = config.GetBool(ConfigKeyOauthEnable)
+	if !configEnable {
 		return
 	}
 	if !config.Exist(ConfigKeyOauthAccessTokenValidTime) {
