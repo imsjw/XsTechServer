@@ -1,10 +1,10 @@
 package handler
 
 import (
+	"frame/log"
 	"frame/protocol/http"
 	"frame/router"
 	"io"
-	"log"
 	"net"
 )
 
@@ -15,7 +15,7 @@ func (This *HttpHandler) handler(conn net.Conn) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			log.Println("[http handler error] ", err)
+			log.Error("frame.handler.HttpHandler 全局异常,错误信息:[", err, "]")
 			conn.Close()
 		}
 	}()
@@ -26,13 +26,13 @@ func (This *HttpHandler) handler(conn net.Conn) {
 			if err == io.EOF {
 				return
 			}
-			log.Println("[http protocol analysis error] ", err)
+			log.Error("[http protocol analysis error] ", err)
 			return
 		}
 
 		i := router.GetInterface(req)
 		if i == nil {
-			log.Println("[url does not exist, url: ", req.GetURL(), "]")
+			log.Error("[url does not exist, url: ", req.GetURL(), "]")
 			resp.SetStatusCode(404)
 			resp.SetStatusMsg("Not Found")
 			resp.SetHeader("Content-Type", "text/plain")
