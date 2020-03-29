@@ -4,7 +4,7 @@ import (
 	"frame/datasource"
 )
 
-func SelectUserByUserNameAndPassword(username string, password string) *User {
+func DaoSelectUserByUserNameAndPassword(username string, password string) *User {
 	sql := "select id,username from user where username = ? and password = ?"
 	rows, err := datasource.Query(sql, username, password)
 	if err != nil {

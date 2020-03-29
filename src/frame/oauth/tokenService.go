@@ -9,11 +9,11 @@ import (
 
 func PassworMethodAuthorize(username string, rawPassword string, client string) interface{} {
 	encodePassword := PasswordEncryption(rawPassword)
-	user := FindUserByUserNameAndPassword(username, encodePassword)
+	user := ServiceFindUserByUserNameAndPassword(username, encodePassword)
 	if user == nil {
 		return ResultUserOrPasswordError
 	}
-	oauth := SelectOauthByUserIdAndClient(user.Id, client)
+	oauth := DaoSelectOauthByUserIdAndClient(user.Id, client)
 	res := new(struct {
 		sysEntity.BaseResult
 		UserId                 int
@@ -23,7 +23,7 @@ func PassworMethodAuthorize(username string, rawPassword string, client string) 
 	})
 
 	//删除旧token
-	DeleteOauthByUserIdAndClient(user.Id, client)
+	DaoDeleteOauthByUserIdAndClient(user.Id, client)
 	//创建新的token
 	oauth = new(Oauth)
 	oauth.UserId = user.Id

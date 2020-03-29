@@ -5,7 +5,7 @@ import (
 	"frame/datasource"
 )
 
-func SelectOauthByUserIdAndClient(userId int, client string) *Oauth {
+func DaoSelectOauthByUserIdAndClient(userId int, client string) *Oauth {
 	sql := "select " +
 		"id,user_id,client,access_token,access_token_expires_time,refresh_token,refresh_token_expires_time," +
 		"create_time,create_user,update_time,update_user " +
@@ -28,7 +28,7 @@ func SelectOauthByUserIdAndClient(userId int, client string) *Oauth {
 	return nil
 }
 
-func DeleteOauthByUserIdAndClient(userId int, client string) {
+func DaoDeleteOauthByUserIdAndClient(userId int, client string) {
 	sql := "delete from oauth where user_id = ? and client = ?"
 	_, err := datasource.Exec(sql, userId, client)
 	if err != nil {

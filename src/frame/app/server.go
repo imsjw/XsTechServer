@@ -21,7 +21,7 @@ func listen() {
 		panic(err)
 	}
 
-	log.Info("frame.app.listen 端口监听成功")
+	log.Info("frame.app.listen 端口监听成功,端口:[", port, "]")
 	for {
 		conn, err := listener.Accept()
 		if err != nil {

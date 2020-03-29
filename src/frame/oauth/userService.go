@@ -1,5 +1,5 @@
 package oauth
 
-func FindUserByUserNameAndPassword(username string, password string) *User {
-	return SelectUserByUserNameAndPassword(username, password)
+func ServiceFindUserByUserNameAndPassword(username string, password string) *User {
+	return DaoSelectUserByUserNameAndPassword(username, password)
 }

@@ -5,7 +5,7 @@ import (
 	"frame/interfaces"
 )
 
-func Token(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
+func ControllerToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
 	p := new(struct {
 		UserName  string
 		Password  string
