@@ -43,6 +43,8 @@ func PassworMethodAuthorize(username string, rawPassword string, client string) 
 
 	InsertOauth(oauth)
 
+	res.Code = sysEntity.ResultCodeOk
+	res.Msg = sysEntity.ResultMsgOk
 	res.UserId = user.Id
 	res.Client = client
 	res.AccessToken = accessToken

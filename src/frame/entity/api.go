@@ -1,10 +1,9 @@
 package entity
 
-func NewSuccessResult(data interface{}) *BaseResult {
+func NewSuccessResult() *BaseResult {
 	res := new(BaseResult)
 	res.Code = ResultCodeOk
 	res.Msg = ResultMsgOk
-	res.Data = data
 	return res
 }
 
