@@ -4,7 +4,6 @@ import (
 	"frame/log"
 	"frame/protocol/http"
 	"frame/router"
-	"io"
 	"net"
 )
 
@@ -21,14 +20,7 @@ func (This *HttpHandler) handler(conn net.Conn) {
 	}()
 	//循环处理请求
 	for {
-		req, resp, err := http.Analysis(conn)
-		if err != nil {
-			if err == io.EOF {
-				return
-			}
-			log.Error("[http protocol analysis error] ", err)
-			return
-		}
+		req, resp := http.Analysis(conn)
 
 		i := router.GetInterface(req)
 		if i == nil {
