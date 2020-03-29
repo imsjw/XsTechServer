@@ -1,6 +1,8 @@
 package handler
 
-import "net"
+import (
+	"net"
+)
 
 type Handler interface {
 	handler(conn net.Conn)

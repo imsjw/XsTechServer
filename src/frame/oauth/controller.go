@@ -43,5 +43,4 @@ func ControllerPostToken(req interfaces.Request, resp interfaces.Response, i *in
 		resp.SetObjResult(entity.NewParamErrorResult("[GrantType]参数错误"))
 		return
 	}
-
 }

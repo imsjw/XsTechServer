@@ -24,13 +24,21 @@ func (This *HttpHandler) handler(conn net.Conn) {
 
 		i := router.GetInterface(req)
 		if i == nil {
-			log.Error("[url does not exist, url: ", req.GetURL(), "]")
+			log.Warning("[frame.handler.HttpHandler 路由中不存在映射,method:[", req.GetMethod(), "] url:[", req.GetURL(), "]")
 			resp.SetStatusCode(404)
 			resp.SetStatusMsg("Not Found")
 			resp.SetHeader("Content-Type", "text/plain")
 			resp.SetStrResult("404 URL Not Found")
 		} else {
-			i.Handler(req, resp, i)
+			if isFilter(req, resp, i) {
+				i.Handler(req, resp, i)
+			} else {
+				log.Warning("[frame.handler.HttpHandler 请求被拦截,method:[", req.GetMethod(), "] url:[", req.GetURL(), "]")
+				resp.SetStatusCode(403)
+				resp.SetStatusMsg("Permission denied")
+				resp.SetHeader("Content-Type", "text/plain")
+				resp.SetStrResult("403 Permission denied")
+			}
 		}
 
 		http.OutResponse(req, resp, i)
@@ -41,5 +49,4 @@ func (This *HttpHandler) handler(conn net.Conn) {
 			return
 		}
 	}
-
 }
