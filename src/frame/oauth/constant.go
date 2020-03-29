@@ -17,6 +17,11 @@ const (
 	ConfigKeyOAuthPasswordSalt          = "oauth.password.salt"
 )
 
+//header中的key
+const (
+	HeaderKeyToken = "Token"
+)
+
 //RouterUrl
 const (
 	UrlToken = "/oauth/token"

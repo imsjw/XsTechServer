@@ -36,11 +36,37 @@ func ControllerPostToken(req interfaces.Request, resp interfaces.Response, i *in
 	switch p.GrantType {
 	case "password":
 		{
-			loginRes := PassworMethodAuthorize(p.UserName, p.Password, p.Client)
+			loginRes := ServicePassworMethodAuthorize(p.UserName, p.Password, p.Client)
 			resp.SetObjResult(loginRes)
 		}
 	default:
 		resp.SetObjResult(entity.NewParamErrorResult("[GrantType]参数错误"))
 		return
 	}
+}
+
+func ControllerGetToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
+	token, _ := req.GetHeader(HeaderKeyToken)
+	oauth := ServiceGetOauthByAccessToken(token)
+	if oauth == nil {
+		resp.SetObjResult(entity.BaseResult{1000, "Token不存在", nil})
+		return
+	}
+
+	res := new(struct {
+		UserId                  int
+		Client                  string
+		AccessToken             string
+		AccessTokenExpiresTime  int64
+		RefreshToken            string
+		RefreshTokenExpiresTime int64
+	})
+
+	res.UserId = oauth.UserId
+	res.Client = oauth.Client
+	res.AccessToken = oauth.AccessToken
+	res.AccessTokenExpiresTime = oauth.AccessTokenExpiresTime
+	res.RefreshToken = oauth.RefreshToken
+	res.RefreshTokenExpiresTime = oauth.RefreshTokenExpiresTime
+	resp.SetObjResult(entity.NewSuccessResult(res))
 }
