@@ -15,7 +15,7 @@ func init() {
 	authDao.Columns = "id,user_id,client,access_token,access_token_expires_time,refresh_token,refresh_token_expires_time,create_time,create_user,update_time,update_user"
 }
 
-func InsertOauth(oauth *Auth) {
+func DaoInsertAuth(oauth *Auth) {
 	kv := make(map[string]interface{})
 
 	if oauth.Id != 0 {
@@ -74,7 +74,7 @@ func InsertOauth(oauth *Auth) {
 	}
 }
 
-func DaoDeleteOauthByUserIdAndClient(userId int, client string) {
+func DaoDeleteAuthByUserIdAndClient(userId int, client string) {
 	sql := fmt.Sprint("delete from ", authDao.TableName, " where user_id = ? and client = ?")
 	_, err := datasource.Exec(sql, userId, client)
 	if err != nil {
@@ -82,7 +82,7 @@ func DaoDeleteOauthByUserIdAndClient(userId int, client string) {
 	}
 }
 
-func DaoSelectOauthByUserIdAndClient(userId int, client string) *Auth {
+func DaoSelectAuthByUserIdAndClient(userId int, client string) *Auth {
 	sql := fmt.Sprint("select ", authDao.Columns, " from ", authDao.TableName, " where user_id = ? and client = ?")
 	rows, err := datasource.Query(sql, userId, client)
 	if err != nil {

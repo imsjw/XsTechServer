@@ -13,7 +13,7 @@ func ServicePassworMethodAuthorize(username string, rawPassword string, client s
 	if user == nil {
 		return ResultUserOrPasswordError
 	}
-	oauth := DaoSelectOauthByUserIdAndClient(user.Id, client)
+	auth := DaoSelectAuthByUserIdAndClient(user.Id, client)
 	res := new(struct {
 		UserId                 int
 		Client                 string
@@ -22,30 +22,30 @@ func ServicePassworMethodAuthorize(username string, rawPassword string, client s
 	})
 
 	//删除旧token
-	DaoDeleteOauthByUserIdAndClient(user.Id, client)
+	DaoDeleteAuthByUserIdAndClient(user.Id, client)
 	//创建新的token
-	oauth = new(Auth)
-	oauth.UserId = user.Id
-	oauth.Client = client
+	auth = new(Auth)
+	auth.UserId = user.Id
+	auth.Client = client
 	currTime := time.Now().Unix()
-	oauth.AccessTokenExpiresTime = currTime + configAccessTokenValidTime
-	oauth.RefreshTokenExpiresTime = currTime + configRefreshTokenValidTime
-	oauth.CreateTime = time.Now().Unix()
-	oauth.UpdateTime = time.Now().Unix()
-	oauth.CreateUser = user.Id
-	oauth.UpdateUser = user.Id
+	auth.AccessTokenExpiresTime = currTime + configAccessTokenValidTime
+	auth.RefreshTokenExpiresTime = currTime + configRefreshTokenValidTime
+	auth.CreateTime = time.Now().Unix()
+	auth.UpdateTime = time.Now().Unix()
+	auth.CreateUser = user.Id
+	auth.UpdateUser = user.Id
 
-	accessToken := JwtHS256(oauth, configAccessTokenSalt)
-	refreshToken := JwtHS256(oauth, configRefreshTokenSalt)
-	oauth.AccessToken = accessToken
-	oauth.RefreshToken = refreshToken
+	accessToken := JwtHS256(auth, configAccessTokenSalt)
+	refreshToken := JwtHS256(auth, configRefreshTokenSalt)
+	auth.AccessToken = accessToken
+	auth.RefreshToken = refreshToken
 
-	InsertOauth(oauth)
+	DaoInsertAuth(auth)
 
 	res.UserId = user.Id
 	res.Client = client
 	res.AccessToken = accessToken
-	res.AccessTokenExpiresTime = oauth.AccessTokenExpiresTime
+	res.AccessTokenExpiresTime = auth.AccessTokenExpiresTime
 	return entity.NewSuccessResult(res)
 }
 
@@ -57,7 +57,7 @@ func ServicePasswordEncryption(rawPassword string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-func ServiceGetOauthByAccessToken(accessToken string) *Auth {
-	oauth := DaoSelectOauthByAccessToken(accessToken)
-	return oauth
+func ServiceGetAuthByAccessToken(accessToken string) *Auth {
+	auth := DaoSelectOauthByAccessToken(accessToken)
+	return auth
 }
