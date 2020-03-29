@@ -1,8 +1,9 @@
 package router
 
 import (
+	"fmt"
 	"frame/interfaces"
-	"log"
+	"frame/log"
 )
 
 var routerMap map[string]map[string]*interfaces.Interface
@@ -13,8 +14,9 @@ func init() {
 
 func Add(url string, handler interfaces.InterfaceHandler, method string) {
 	if handler == nil {
-		log.Println("router.Add error [handler is nil]")
-		return
+		errMsg := fmt.Sprint("frame.router.Add 添加路由映射失败,处理处理函数为nil")
+		log.Error(errMsg)
+		panic(errMsg)
 	}
 
 	i := interfaces.NewInterface()
@@ -29,12 +31,13 @@ func Add(url string, handler interfaces.InterfaceHandler, method string) {
 
 	_, exist = routerMap[method][url]
 	if exist {
-		log.Println("router.Add error [url exist] [method: ", method, " url: ", url, "]")
-		return
+		errMsg := fmt.Sprint("frame.router.Add 添加路由映射失败,method和url已经存在,method:[", method, "] url:[", url, "]")
+		log.Error(errMsg)
+		panic(errMsg)
 	}
 
 	routerMap[method][url] = i
-	log.Println("router.Add method: ", method, " url: ", url)
+	log.Info("frame.router.Add 添加路由映射成功,method:[", method, "] url:[", url, "]")
 }
 
 func GetInterface(req interfaces.Request) *interfaces.Interface {

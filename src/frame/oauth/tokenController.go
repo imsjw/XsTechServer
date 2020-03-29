@@ -1,12 +1,11 @@
-package controller
+package oauth
 
 import (
 	"frame/entity"
 	"frame/interfaces"
-	"oauth/service"
 )
 
-func Token(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
+func ControllerToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
 	p := new(struct {
 		UserName  string
 		Password  string
@@ -37,7 +36,7 @@ func Token(req interfaces.Request, resp interfaces.Response, i *interfaces.Inter
 	switch p.GrantType {
 	case "password":
 		{
-			loginRes := service.PassworMethodAuthorize(p.UserName, p.Password, p.Client)
+			loginRes := PassworMethodAuthorize(p.UserName, p.Password, p.Client)
 			resp.SetObjResult(loginRes)
 		}
 	default:

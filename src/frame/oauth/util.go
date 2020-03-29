@@ -1,4 +1,4 @@
-package util
+package oauth
 
 import (
 	"crypto/sha256"

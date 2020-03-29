@@ -1,87 +1,71 @@
 package config
 
-import (
-	"encoding/json"
-	"io/ioutil"
-	"log"
-	"os"
-	"path/filepath"
-)
-
 var configInstance Config
 
-func Init() error {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		log.Println("get config file path error [error info:", err, "]")
+func init() {
+	configInstance = NewDefaultConfig()
+}
+
+func SetInstance(instance Config) {
+	configInstance = instance
+}
+
+func Init() {
+	configInstance.Init()
+}
+
+func Exist(key string) bool {
+	return configInstance.Exist(key)
+}
+
+func Set(key string, value interface{}) {
+	configInstance.Set(key, value)
+}
+
+func Get(key string) interface{} {
+	return configInstance.Get(key)
+}
+
+func GetString(key string) string {
+	v := configInstance.Get(key)
+	if v != nil {
+		return v.(string)
 	}
-	path := filepath.Join(dir, "..", DefaultConfigFilePath)
+	return ""
+}
 
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
-		log.Println("read config file error [file path:", path, "] [error info:", err, "]")
-		return err
+func GetInt(key string) int {
+	v := configInstance.Get(key)
+	if v == nil {
+		return 0
 	}
 
-	defaultConfig := new(DefaultConfig)
-	err = json.Unmarshal(data, defaultConfig)
-	if err != nil {
-		log.Println("config json unmarshal error [file path:", path, "] [error info:", err, "]")
-		return err
+	switch v.(type) {
+	case float64:
+		return (int)(v.(float64))
+	default:
+		return v.(int)
 	}
-	configInstance = defaultConfig
-	log.Println("config init success [file path:", path, "]")
-	return nil
 }
 
-func GetHttpServerPort() int {
-	return configInstance.GetHttpServerPort()
+func GetInt64(key string) int64 {
+	v := configInstance.Get(key)
+	if v == nil {
+		return 0
+	}
+
+	switch v.(type) {
+	case float64:
+		return (int64)(v.(float64))
+	default:
+		return v.(int64)
+	}
 }
 
-func GetOAuthEnable() bool {
-	return configInstance.GetHttpOAuthEnable()
-}
-
-func GetHttpOAuthPasswordSalt() string {
-	return configInstance.GetHttpOAuthPasswordSalt()
-}
-
-func GetDataSourceDriverName() string {
-	return configInstance.GetDataSourceDriverName()
-}
-
-func GetDataSourceUserName() string {
-	return configInstance.GetDataSourceUserName()
-}
-
-func GetDataSourcePassword() string {
-	return configInstance.GetDataSourcePassword()
-}
-
-func GetDataSourceHost() string {
-	return configInstance.GetDataSourceHost()
-}
-
-func GetDataSourcePort() int {
-	return configInstance.GetDataSourcePort()
-}
-
-func GetDataSourceDBName() string {
-	return configInstance.GetDataSourceDBName()
-}
-
-func GetHttpOAuthAccessTokenSalt() string {
-	return configInstance.GetHttpOAuthAccessTokenSalt()
-}
-
-func GetHttpOAuthAccessTokenValidTime() int64 {
-	return configInstance.GetHttpOAuthAccessTokenValidTime()
-}
-
-func GetHttpOAuthRefreshTokenSalt() string {
-	return configInstance.GetHttpOAuthRefreshTokenSalt()
-}
-
-func GetHttpOAuthRefreshTokenValidTime() int64 {
-	return configInstance.GetHttpOAuthRefreshTokenValidTime()
+func GetBool(key string) bool {
+	v := configInstance.Get(key)
+	if v == nil {
+		return false
+	}
+	return v.(bool)
 }

@@ -1,22 +1,21 @@
-package dao
+package oauth
 
 import (
 	"fmt"
-	"frame/data_source"
-	"oauth/entity"
+	"frame/datasource"
 )
 
-func SelectOauthByUserIdAndClient(userId int, client string) *entity.Oauth {
+func DaoSelectOauthByUserIdAndClient(userId int, client string) *Oauth {
 	sql := "select " +
 		"id,user_id,client,access_token,access_token_expires_time,refresh_token,refresh_token_expires_time," +
 		"create_time,create_user,update_time,update_user " +
 		"from oauth where user_id = ? and client = ?"
-	rows, err := data_source.Query(sql, userId, client)
+	rows, err := datasource.Query(sql, userId, client)
 	if err != nil {
 		panic(err)
 	}
 
-	var oauth entity.Oauth
+	var oauth Oauth
 	for rows.Next() {
 		err := rows.Scan(&oauth.Id, &oauth.UserId, &oauth.Client, &oauth.AccessToken, &oauth.AccessTokenExpiresTime,
 			&oauth.RefreshToken, &oauth.RefreshTokenExpiresTime, &oauth.CreateTime, &oauth.CreateUser, &oauth.UpdateTime, &oauth.UpdateUser)
@@ -29,15 +28,15 @@ func SelectOauthByUserIdAndClient(userId int, client string) *entity.Oauth {
 	return nil
 }
 
-func DeleteOauthByUserIdAndClient(userId int, client string) {
+func DaoDeleteOauthByUserIdAndClient(userId int, client string) {
 	sql := "delete from oauth where user_id = ? and client = ?"
-	_, err := data_source.Exec(sql, userId, client)
+	_, err := datasource.Exec(sql, userId, client)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func InsertOauth(oauth *entity.Oauth) {
+func InsertOauth(oauth *Oauth) {
 	kv := make(map[string]interface{})
 
 	if oauth.Id != 0 {
@@ -90,7 +89,7 @@ func InsertOauth(oauth *entity.Oauth) {
 
 	sql := fmt.Sprint("insert into oauth (", sqlColumNames+") values (", rpStr, ")")
 
-	_, err := data_source.Exec(sql, sqlColumValues...)
+	_, err := datasource.Exec(sql, sqlColumValues...)
 	if err != nil {
 		panic(err)
 	}
