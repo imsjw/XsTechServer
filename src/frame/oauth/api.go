@@ -35,5 +35,5 @@ func filter(req interfaces.Request, resp interfaces.Response, i *interfaces.Inte
 		return false
 	}
 
-	return false
+	return ServiceExistResourceByUserId(auth.UserId)
 }

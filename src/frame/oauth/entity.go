@@ -2,6 +2,13 @@ package oauth
 
 import "frame/entity"
 
+type User struct {
+	entity.BaseEntity
+	Id       int
+	UserName string
+	Password string
+}
+
 type Auth struct {
 	entity.BaseEntity
 	Id                      int
@@ -11,4 +18,19 @@ type Auth struct {
 	AccessTokenExpiresTime  int64
 	RefreshToken            string
 	RefreshTokenExpiresTime int64
+}
+
+type Resource struct {
+	entity.BaseEntity
+	Id     int
+	Client string
+	Method string
+	Url    string
+}
+
+type UserRole struct {
+	entity.BaseEntity
+	Id     int
+	UserId int
+	RoleId int
 }
