@@ -47,7 +47,7 @@ func ControllerPostToken(req interfaces.Request, resp interfaces.Response, i *in
 
 func ControllerGetToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
 	token, _ := req.GetHeader(HeaderKeyToken)
-	oauth := ServiceGetOauthByAccessToken(token)
+	oauth := ServiceGetAuthByAccessToken(token)
 	if oauth == nil {
 		resp.SetObjResult(entity.BaseResult{1000, "Token不存在", nil})
 		return

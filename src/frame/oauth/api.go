@@ -4,6 +4,7 @@ import (
 	"frame/handler"
 	"frame/interfaces"
 	"frame/protocol/http"
+	"time"
 )
 
 func Init() {
@@ -21,5 +22,18 @@ func AddFilterWhiteList() {
 }
 
 func filter(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) bool {
-	return false
+	token, exist := req.GetHeader(HeaderKeyToken)
+	if !exist {
+		return false
+	}
+	auth := DaoSelectOauthByAccessToken(token)
+	if auth == nil {
+		return false
+	}
+
+	if auth.AccessTokenExpiresTime < time.Now().Unix() {
+		return false
+	}
+
+	return ServiceExistResourceByUserId(auth.UserId)
 }
