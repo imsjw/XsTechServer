@@ -23,7 +23,6 @@ type Auth struct {
 type Resource struct {
 	entity.BaseEntity
 	Id     int
-	Client string
 	Method string
 	Url    string
 }

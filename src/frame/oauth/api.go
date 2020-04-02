@@ -13,20 +13,20 @@ func Init() {
 		return
 	}
 	initRouter()
-	AddFilterWhiteList()
+	addFilterWhiteList()
 	handler.AddFilter(filter)
 }
 
-func AddFilterWhiteList() {
-	handler.AddFilterWhiteList(http.MethodPOST, UrlToken)
+func addFilterWhiteList() {
+	handler.AddFilterWhiteList(http.MethodPOST, urlToken)
 }
 
 func filter(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) bool {
-	token, exist := req.GetHeader(HeaderKeyToken)
+	token, exist := req.GetHeader(headerKeyToken)
 	if !exist {
 		return false
 	}
-	auth := DaoSelectOauthByAccessToken(token)
+	auth := daoSelectOauthByAccessToken(token)
 	if auth == nil {
 		return false
 	}
@@ -35,5 +35,12 @@ func filter(req interfaces.Request, resp interfaces.Response, i *interfaces.Inte
 		return false
 	}
 
-	return ServiceExistResourceByUserId(auth.UserId)
+	url := req.GetURL()
+	method := req.GetMethod()
+
+	if url == urlToken && method == http.MethodGET {
+		return true
+	}
+
+	return serviceExistResourceByUserId(auth.UserId, url, method)
 }

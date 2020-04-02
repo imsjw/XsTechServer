@@ -13,7 +13,7 @@ func ServicePassworMethodAuthorize(username string, rawPassword string, client s
 	if user == nil {
 		return ResultUserOrPasswordError
 	}
-	auth := DaoSelectAuthByUserIdAndClient(user.Id, client)
+	auth := daoSelectAuthByUserIdAndClient(user.Id, client)
 	res := new(struct {
 		UserId                 int
 		Client                 string
@@ -22,7 +22,7 @@ func ServicePassworMethodAuthorize(username string, rawPassword string, client s
 	})
 
 	//删除旧token
-	DaoDeleteAuthByUserIdAndClient(user.Id, client)
+	daoDeleteAuthByUserIdAndClient(user.Id, client)
 	//创建新的token
 	auth = new(Auth)
 	auth.UserId = user.Id
@@ -35,12 +35,12 @@ func ServicePassworMethodAuthorize(username string, rawPassword string, client s
 	auth.CreateUser = user.Id
 	auth.UpdateUser = user.Id
 
-	accessToken := JwtHS256(auth, configAccessTokenSalt)
-	refreshToken := JwtHS256(auth, configRefreshTokenSalt)
+	accessToken := jwtHS256(auth, configAccessTokenSalt)
+	refreshToken := jwtHS256(auth, configRefreshTokenSalt)
 	auth.AccessToken = accessToken
 	auth.RefreshToken = refreshToken
 
-	DaoInsertAuth(auth)
+	daoInsertAuth(auth)
 
 	res.UserId = user.Id
 	res.Client = client
@@ -58,6 +58,6 @@ func ServicePasswordEncryption(rawPassword string) string {
 }
 
 func ServiceGetAuthByAccessToken(accessToken string) *Auth {
-	auth := DaoSelectOauthByAccessToken(accessToken)
+	auth := daoSelectOauthByAccessToken(accessToken)
 	return auth
 }

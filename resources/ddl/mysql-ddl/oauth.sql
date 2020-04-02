@@ -23,7 +23,6 @@ create table `oauth_role` (
 
 create table `oauth_resource` (
     `id` int unsigned primary key auto_increment comment '唯一标识符',
-    `client` varchar(32) not null comment '客户端类型',
     `method` varchar(32) not null comment '访问URL',
     `url` varchar(32) not null comment '访问URL',
     `create_time` bigint unsigned not null comment '创建时间',

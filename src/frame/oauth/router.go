@@ -6,6 +6,6 @@ import (
 )
 
 func initRouter() {
-	router.Add(UrlToken, ControllerPostToken, http.MethodPOST)
-	router.Add(UrlToken, ControllerPostToken, http.MethodGET)
+	router.Add(urlToken, controllerPostToken, http.MethodPOST)
+	router.Add(urlToken, ControllerGetToken, http.MethodGET)
 }

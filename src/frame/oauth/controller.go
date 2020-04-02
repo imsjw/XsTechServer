@@ -5,7 +5,7 @@ import (
 	"frame/interfaces"
 )
 
-func ControllerPostToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
+func controllerPostToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
 	p := new(struct {
 		UserName  string
 		Password  string
@@ -46,7 +46,7 @@ func ControllerPostToken(req interfaces.Request, resp interfaces.Response, i *in
 }
 
 func ControllerGetToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
-	token, _ := req.GetHeader(HeaderKeyToken)
+	token, _ := req.GetHeader(headerKeyToken)
 	oauth := ServiceGetAuthByAccessToken(token)
 	if oauth == nil {
 		resp.SetObjResult(entity.BaseResult{1000, "Token不存在", nil})
