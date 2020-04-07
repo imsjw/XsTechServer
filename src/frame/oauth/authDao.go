@@ -82,6 +82,10 @@ func daoDeleteAuthByUserIdAndClient(userId int, client string) {
 	}
 }
 
+func daoUpdateAuthByToken(auth *Auth, token string) {
+
+}
+
 func daoSelectAuthByUserIdAndClient(userId int, client string) *Auth {
 	sql := fmt.Sprint("select ", authDao.Columns, " from ", authDao.TableName, " where user_id = ? and client = ?")
 	rows, err := datasource.Query(sql, userId, client)

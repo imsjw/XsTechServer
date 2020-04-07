@@ -5,7 +5,10 @@ import (
 	"frame/interfaces"
 )
 
-func controllerPostToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
+/**
+登陆接口
+*/
+func controllerUserLogin(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
 	p := new(struct {
 		UserName  string
 		Password  string
@@ -36,7 +39,7 @@ func controllerPostToken(req interfaces.Request, resp interfaces.Response, i *in
 	switch p.GrantType {
 	case "password":
 		{
-			loginRes := ServicePassworMethodAuthorize(p.UserName, p.Password, p.Client)
+			loginRes := servicePassworMethodAuthorize(p.UserName, p.Password, p.Client)
 			resp.SetObjResult(loginRes)
 		}
 	default:
@@ -45,9 +48,12 @@ func controllerPostToken(req interfaces.Request, resp interfaces.Response, i *in
 	}
 }
 
-func ControllerGetToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
+/**
+查询token信息接口
+*/
+func controllerGetToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
 	token, _ := req.GetHeader(headerKeyToken)
-	oauth := ServiceGetAuthByAccessToken(token)
+	oauth := serviceGetAuthByAccessToken(token)
 	if oauth == nil {
 		resp.SetObjResult(entity.BaseResult{1000, "Token不存在", nil})
 		return
@@ -69,4 +75,11 @@ func ControllerGetToken(req interfaces.Request, resp interfaces.Response, i *int
 	res.RefreshToken = oauth.RefreshToken
 	res.RefreshTokenExpiresTime = oauth.RefreshTokenExpiresTime
 	resp.SetObjResult(entity.NewSuccessResult(res))
+}
+
+/**
+刷新token的接口
+*/
+func controllerRefreshToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
+
 }

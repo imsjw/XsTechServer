@@ -24,5 +24,6 @@ const (
 
 //RouterUrl
 const (
-	urlToken = "/oauth/token"
+	urlToken        = "/oauth/token"
+	urlTokenRefresh = "/oauth/token/refresh"
 )

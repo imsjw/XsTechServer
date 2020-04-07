@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-func ServicePassworMethodAuthorize(username string, rawPassword string, client string) interface{} {
-	encodePassword := ServicePasswordEncryption(rawPassword)
+func servicePassworMethodAuthorize(username string, rawPassword string, client string) interface{} {
+	encodePassword := servicePasswordEncryption(rawPassword)
 	user := ServiceFindUserByUserNameAndPassword(username, encodePassword)
 	if user == nil {
 		return ResultUserOrPasswordError
@@ -49,7 +49,7 @@ func ServicePassworMethodAuthorize(username string, rawPassword string, client s
 	return entity.NewSuccessResult(res)
 }
 
-func ServicePasswordEncryption(rawPassword string) string {
+func servicePasswordEncryption(rawPassword string) string {
 	salt := configPasswordSalt
 	h := md5.New()
 	h.Write([]byte(rawPassword))
@@ -57,7 +57,11 @@ func ServicePasswordEncryption(rawPassword string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-func ServiceGetAuthByAccessToken(accessToken string) *Auth {
+func serviceGetAuthByAccessToken(accessToken string) *Auth {
 	auth := daoSelectOauthByAccessToken(accessToken)
 	return auth
+}
+
+func serviceRefreshToken() {
+
 }
