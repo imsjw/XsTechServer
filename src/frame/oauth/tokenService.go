@@ -15,10 +15,10 @@ func servicePassworMethodAuthorize(username string, rawPassword string, client s
 	}
 	auth := daoSelectAuthByUserIdAndClient(user.Id, client)
 	res := new(struct {
-		UserId                 int
-		Client                 string
-		AccessToken            string
-		AccessTokenExpiresTime int64
+		UserId                 int    `json:"userId"`
+		Client                 string `json:"client"`
+		AccessToken            string `json:"accessToken"`
+		AccessTokenExpiresTime int64  `json:"accessTokenExpiresTime"`
 	})
 
 	//删除旧token
@@ -62,6 +62,29 @@ func serviceGetAuthByAccessToken(accessToken string) *Auth {
 	return auth
 }
 
-func serviceRefreshToken() {
+/**
+根据authId刷新token
+*/
+func serviceRefreshTokenById(auth *Auth) *Auth {
+	currTime := time.Now().Unix()
 
+	newAuth := new(Auth)
+	newAuth.UserId = auth.UserId
+	newAuth.Client = auth.Client
+	newAuth.AccessTokenExpiresTime = currTime + configAccessTokenValidTime
+	newAuth.RefreshTokenExpiresTime = currTime + configRefreshTokenValidTime
+	newAuth.CreateTime = auth.CreateTime
+	newAuth.UpdateTime = time.Now().Unix()
+	newAuth.CreateUser = auth.CreateUser
+	newAuth.UpdateUser = auth.UserId
+
+	accessToken := jwtHS256(newAuth, configAccessTokenSalt)
+	refreshToken := jwtHS256(newAuth, configRefreshTokenSalt)
+	newAuth.AccessToken = accessToken
+	newAuth.RefreshToken = refreshToken
+
+	newAuth.Id = auth.Id
+
+	daoRefreshTokenById(newAuth)
+	return daoSelectOauthById(auth.Id)
 }

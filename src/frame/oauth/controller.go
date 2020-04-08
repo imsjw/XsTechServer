@@ -3,6 +3,7 @@ package oauth
 import (
 	"frame/entity"
 	"frame/interfaces"
+	"time"
 )
 
 /**
@@ -10,10 +11,10 @@ import (
 */
 func controllerUserLogin(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
 	p := new(struct {
-		UserName  string
-		Password  string
-		Client    string
-		GrantType string
+		UserName  string `json:"userName"`
+		Password  string `json:"password"`
+		Client    string `json:"client"`
+		GrantType string `json:"grantType"`
 	})
 	err := req.GetObjParam(p)
 	if err != nil {
@@ -22,17 +23,17 @@ func controllerUserLogin(req interfaces.Request, resp interfaces.Response, i *in
 	}
 
 	if p.UserName == "" {
-		resp.SetObjResult(entity.NewParamErrorResult("[UserName]不能为空"))
+		resp.SetObjResult(entity.NewParamErrorResult("[userName]不能为空"))
 		return
 	}
 
 	if p.Password == "" {
-		resp.SetObjResult(entity.NewParamErrorResult("[Password]不能为空"))
+		resp.SetObjResult(entity.NewParamErrorResult("[password]不能为空"))
 		return
 	}
 
 	if p.Client == "" {
-		resp.SetObjResult(entity.NewParamErrorResult("[Client]不能为空"))
+		resp.SetObjResult(entity.NewParamErrorResult("[client]不能为空"))
 		return
 	}
 
@@ -43,7 +44,7 @@ func controllerUserLogin(req interfaces.Request, resp interfaces.Response, i *in
 			resp.SetObjResult(loginRes)
 		}
 	default:
-		resp.SetObjResult(entity.NewParamErrorResult("[GrantType]参数错误"))
+		resp.SetObjResult(entity.NewParamErrorResult("[grantType]参数错误"))
 		return
 	}
 }
@@ -60,12 +61,12 @@ func controllerGetToken(req interfaces.Request, resp interfaces.Response, i *int
 	}
 
 	res := new(struct {
-		UserId                  int
-		Client                  string
-		AccessToken             string
-		AccessTokenExpiresTime  int64
-		RefreshToken            string
-		RefreshTokenExpiresTime int64
+		UserId                  int    `json:"userId"`
+		Client                  string `json:"client"`
+		AccessToken             string `json:"accessToken"`
+		AccessTokenExpiresTime  int64  `json:"accessTokenExpiresTime"`
+		RefreshToken            string `json:"refreshToken"`
+		RefreshTokenExpiresTime int64  `json:"refreshTokenExpiresTime"`
 	})
 
 	res.UserId = oauth.UserId
@@ -81,5 +82,48 @@ func controllerGetToken(req interfaces.Request, resp interfaces.Response, i *int
 刷新token的接口
 */
 func controllerRefreshToken(req interfaces.Request, resp interfaces.Response, i *interfaces.Interface) {
+	p := new(struct {
+		RefreshToken string `json:"refreshToken"`
+	})
+	err := req.GetObjParam(p)
+	if err != nil {
+		resp.SetObjResult(entity.NewParamErrorResult("请传入合法参数"))
+		return
+	}
+	if p.RefreshToken == "" {
+		resp.SetObjResult(entity.NewParamErrorResult("[refreshToken]不能为空"))
+		return
+	}
 
+	token, _ := req.GetHeader(headerKeyToken)
+	auth := serviceGetAuthByAccessToken(token)
+	if auth == nil {
+		resp.SetObjResult(entity.BaseResult{1000, "Token不存在", nil})
+		return
+	}
+	if auth.RefreshToken != p.RefreshToken {
+		resp.SetObjResult(entity.NewParamErrorResult("refreshToken不正确"))
+		return
+	}
+	if auth.RefreshTokenExpiresTime < time.Now().Unix() {
+		resp.SetObjResult(entity.NewParamErrorResult("refreshToken已过期"))
+		return
+	}
+	auth = serviceRefreshTokenById(auth)
+	res := new(struct {
+		UserId                  int    `json:"userId"`
+		Client                  string `json:"client"`
+		AccessToken             string `json:"accessToken"`
+		AccessTokenExpiresTime  int64  `json:"accessTokenExpiresTime"`
+		RefreshToken            string `json:"refreshToken"`
+		RefreshTokenExpiresTime int64  `json:"refreshTokenExpiresTime"`
+	})
+	res.UserId = auth.UserId
+	res.Client = auth.Client
+	res.AccessToken = auth.AccessToken
+	res.AccessTokenExpiresTime = auth.AccessTokenExpiresTime
+	res.RefreshToken = auth.RefreshToken
+	res.RefreshTokenExpiresTime = auth.RefreshTokenExpiresTime
+
+	resp.SetObjResult(entity.NewSuccessResult(res))
 }
