@@ -45,10 +45,6 @@ func filter(req interfaces.Request, resp interfaces.Response, i *interfaces.Inte
 	url := req.GetURL()
 	method := req.GetMethod()
 
-	if url == urlToken && method == http.MethodGET {
-		return true
-	}
-
 	if isWhiteList(req) {
 		return true
 	}
