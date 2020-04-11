@@ -10,7 +10,7 @@ import (
 const Base64HS256Header = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 const JWTSeparators = "."
 
-func JwtHS256(data interface{}, secret string) string {
+func jwtHS256(data interface{}, secret string) string {
 	dataBytes, _ := json.Marshal(data)
 
 	payload := base64.StdEncoding.EncodeToString(dataBytes)

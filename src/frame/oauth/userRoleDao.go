@@ -14,7 +14,7 @@ func init() {
 	userRoleDao.Columns = "id,create_time,create_user,update_time,update_user"
 }
 
-func DaoSelectRoleIdsByUserId(userId int) []int {
+func daoSelectRoleIdsByUserId(userId int) []int {
 	sql := fmt.Sprint("select role_id from ", userRoleDao.TableName, " where user_id = ?")
 	rows, err := datasource.Query(sql, userId)
 	if err != nil {

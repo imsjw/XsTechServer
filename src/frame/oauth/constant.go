@@ -9,20 +9,21 @@ var ResultUserOrPasswordError = entity.BaseResult{Code: 100, Msg: "账号不存�
 
 //ConfigKey
 const (
-	ConfigKeyOauthEnable                = "oauth.enable"
-	ConfigKeyOauthAccessTokenValidTime  = "oauth.accessToken.validTime"
-	ConfigKeyOauthRefreshTokenValidTime = "oauth.refreshToken.validTime"
-	ConfigKeyOauthAccessTokenSalt       = "oauth.accessToken.salt"
-	ConfigKeyOauthRefreshTokenSalt      = "oauth.refreshToken.salt"
-	ConfigKeyOAuthPasswordSalt          = "oauth.password.salt"
+	configKeyOauthEnable                = "oauth.enable"
+	configKeyOauthAccessTokenValidTime  = "oauth.accessToken.validTime"
+	configKeyOauthRefreshTokenValidTime = "oauth.refreshToken.validTime"
+	configKeyOauthAccessTokenSalt       = "oauth.accessToken.salt"
+	configKeyOauthRefreshTokenSalt      = "oauth.refreshToken.salt"
+	configKeyOAuthPasswordSalt          = "oauth.password.salt"
 )
 
 //header中的key
 const (
-	HeaderKeyToken = "Token"
+	headerKeyToken = "Token"
 )
 
 //RouterUrl
 const (
-	UrlToken = "/oauth/token"
+	urlToken        = "/oauth/token"
+	urlTokenRefresh = "/oauth/token/refresh"
 )

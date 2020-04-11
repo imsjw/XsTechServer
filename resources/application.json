@@ -10,11 +10,11 @@
       "salt": "aaaaaa"
     },
     "accessToken": {
-      "salt": "aaaaaa",
+      "salt": "accessTokenSalt",
       "validTime": 86400000
     },
     "refreshToken": {
-      "salt": "aaaaaa",
+      "salt": "refreshTokenSalt",
       "validTime": 2592000000
     }
   },

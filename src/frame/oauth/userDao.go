@@ -15,7 +15,7 @@ func init() {
 	userDao.Columns = "id,username,create_time,create_user,update_time,update_user"
 }
 
-func DaoSelectUserByUserNameAndPassword(username string, password string) *User {
+func daoSelectUserByUserNameAndPassword(username string, password string) *User {
 	sql := fmt.Sprint("select ", userDao.Columns, " from ", userDao.TableName, " where username = ? and password = ?")
 	rows, err := datasource.Query(sql, username, password)
 	if err != nil {

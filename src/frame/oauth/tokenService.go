@@ -7,22 +7,22 @@ import (
 	"time"
 )
 
-func ServicePassworMethodAuthorize(username string, rawPassword string, client string) interface{} {
-	encodePassword := ServicePasswordEncryption(rawPassword)
+func servicePassworMethodAuthorize(username string, rawPassword string, client string) interface{} {
+	encodePassword := servicePasswordEncryption(rawPassword)
 	user := ServiceFindUserByUserNameAndPassword(username, encodePassword)
 	if user == nil {
 		return ResultUserOrPasswordError
 	}
-	auth := DaoSelectAuthByUserIdAndClient(user.Id, client)
+	auth := daoSelectAuthByUserIdAndClient(user.Id, client)
 	res := new(struct {
-		UserId                 int
-		Client                 string
-		AccessToken            string
-		AccessTokenExpiresTime int64
+		UserId                 int    `json:"userId"`
+		Client                 string `json:"client"`
+		AccessToken            string `json:"accessToken"`
+		AccessTokenExpiresTime int64  `json:"accessTokenExpiresTime"`
 	})
 
 	//删除旧token
-	DaoDeleteAuthByUserIdAndClient(user.Id, client)
+	daoDeleteAuthByUserIdAndClient(user.Id, client)
 	//创建新的token
 	auth = new(Auth)
 	auth.UserId = user.Id
@@ -35,12 +35,12 @@ func ServicePassworMethodAuthorize(username string, rawPassword string, client s
 	auth.CreateUser = user.Id
 	auth.UpdateUser = user.Id
 
-	accessToken := JwtHS256(auth, configAccessTokenSalt)
-	refreshToken := JwtHS256(auth, configRefreshTokenSalt)
+	accessToken := jwtHS256(auth, configAccessTokenSalt)
+	refreshToken := jwtHS256(auth, configRefreshTokenSalt)
 	auth.AccessToken = accessToken
 	auth.RefreshToken = refreshToken
 
-	DaoInsertAuth(auth)
+	daoInsertAuth(auth)
 
 	res.UserId = user.Id
 	res.Client = client
@@ -49,7 +49,7 @@ func ServicePassworMethodAuthorize(username string, rawPassword string, client s
 	return entity.NewSuccessResult(res)
 }
 
-func ServicePasswordEncryption(rawPassword string) string {
+func servicePasswordEncryption(rawPassword string) string {
 	salt := configPasswordSalt
 	h := md5.New()
 	h.Write([]byte(rawPassword))
@@ -57,7 +57,34 @@ func ServicePasswordEncryption(rawPassword string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-func ServiceGetAuthByAccessToken(accessToken string) *Auth {
-	auth := DaoSelectOauthByAccessToken(accessToken)
+func serviceGetAuthByAccessToken(accessToken string) *Auth {
+	auth := daoSelectOauthByAccessToken(accessToken)
 	return auth
+}
+
+/**
+根据authId刷新token
+*/
+func serviceRefreshTokenById(auth *Auth) *Auth {
+	currTime := time.Now().Unix()
+
+	newAuth := new(Auth)
+	newAuth.UserId = auth.UserId
+	newAuth.Client = auth.Client
+	newAuth.AccessTokenExpiresTime = currTime + configAccessTokenValidTime
+	newAuth.RefreshTokenExpiresTime = currTime + configRefreshTokenValidTime
+	newAuth.CreateTime = auth.CreateTime
+	newAuth.UpdateTime = time.Now().Unix()
+	newAuth.CreateUser = auth.CreateUser
+	newAuth.UpdateUser = auth.UserId
+
+	accessToken := jwtHS256(newAuth, configAccessTokenSalt)
+	refreshToken := jwtHS256(newAuth, configRefreshTokenSalt)
+	newAuth.AccessToken = accessToken
+	newAuth.RefreshToken = refreshToken
+
+	newAuth.Id = auth.Id
+
+	daoRefreshTokenById(newAuth)
+	return daoSelectOauthById(auth.Id)
 }

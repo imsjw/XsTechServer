@@ -15,7 +15,7 @@ func init() {
 	authDao.Columns = "id,user_id,client,access_token,access_token_expires_time,refresh_token,refresh_token_expires_time,create_time,create_user,update_time,update_user"
 }
 
-func DaoInsertAuth(oauth *Auth) {
+func daoInsertAuth(oauth *Auth) {
 	kv := make(map[string]interface{})
 
 	if oauth.Id != 0 {
@@ -74,7 +74,7 @@ func DaoInsertAuth(oauth *Auth) {
 	}
 }
 
-func DaoDeleteAuthByUserIdAndClient(userId int, client string) {
+func daoDeleteAuthByUserIdAndClient(userId int, client string) {
 	sql := fmt.Sprint("delete from ", authDao.TableName, " where user_id = ? and client = ?")
 	_, err := datasource.Exec(sql, userId, client)
 	if err != nil {
@@ -82,7 +82,15 @@ func DaoDeleteAuthByUserIdAndClient(userId int, client string) {
 	}
 }
 
-func DaoSelectAuthByUserIdAndClient(userId int, client string) *Auth {
+func daoRefreshTokenById(auth *Auth) {
+	sql := fmt.Sprint("update ", authDao.TableName, " set access_token = ?, access_token_expires_time = ?, refresh_token = ?, refresh_token_expires_time = ?, update_user = ?, update_time = ? where id = ?")
+	_, err := datasource.Exec(sql, auth.AccessToken, auth.AccessTokenExpiresTime, auth.RefreshToken, auth.RefreshTokenExpiresTime, auth.UpdateUser, auth.UpdateTime, auth.Id)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func daoSelectAuthByUserIdAndClient(userId int, client string) *Auth {
 	sql := fmt.Sprint("select ", authDao.Columns, " from ", authDao.TableName, " where user_id = ? and client = ?")
 	rows, err := datasource.Query(sql, userId, client)
 	if err != nil {
@@ -96,9 +104,21 @@ func DaoSelectAuthByUserIdAndClient(userId int, client string) *Auth {
 	return nil
 }
 
-func DaoSelectOauthByAccessToken(accessToken string) *Auth {
+func daoSelectOauthByAccessToken(accessToken string) *Auth {
 	sql := fmt.Sprint("select ", authDao.Columns, " from ", authDao.TableName, " where access_token = ?")
 	rows, err := datasource.Query(sql, accessToken)
+	if err != nil {
+		panic(err)
+	}
+	for rows.Next() {
+		return daoRowsToAuth(rows)
+	}
+	return nil
+}
+
+func daoSelectOauthById(id int) *Auth {
+	sql := fmt.Sprint("select ", authDao.Columns, " from ", authDao.TableName, " where id = ?")
+	rows, err := datasource.Query(sql, id)
 	if err != nil {
 		panic(err)
 	}
